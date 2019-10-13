@@ -149,10 +149,7 @@ function TSConstructSignatureDeclaration(node) {
 }
 
 function TSPropertySignature(node) {
-  const {
-    readonly,
-    initializer
-  } = node;
+  const { readonly, initializer } = node;
 
   if (readonly) {
     this.word("readonly");
@@ -195,9 +192,7 @@ function TSMethodSignature(node) {
 }
 
 function TSIndexSignature(node) {
-  const {
-    readonly
-  } = node;
+  const { readonly } = node;
 
   if (readonly) {
     this.word("readonly");
@@ -272,10 +267,8 @@ function TSConstructorType(node) {
 }
 
 function tsPrintFunctionOrConstructorType(node) {
-  const {
-    typeParameters,
-    parameters
-  } = node;
+  const { typeParameters, parameters } = node;
+  this.token("(");
   this.print(typeParameters, node);
   this.token("(");
 
@@ -286,6 +279,7 @@ function tsPrintFunctionOrConstructorType(node) {
   this.token("=>");
   this.space();
   this.print(node.typeAnnotation.typeAnnotation, node);
+  this.token(")");
 }
 
 function TSTypeReference(node) {
@@ -374,7 +368,6 @@ function tsPrintUnionOrIntersectionType(node, sep) {
       this.token(sep);
       this.space();
     }
-
   });
 }
 
@@ -427,11 +420,7 @@ function TSIndexedAccessType(node) {
 }
 
 function TSMappedType(node) {
-  const {
-    readonly,
-    typeParameter,
-    optional
-  } = node;
+  const { readonly, typeParameter, optional } = node;
   this.token("{");
   this.space();
 
@@ -477,13 +466,7 @@ function TSExpressionWithTypeArguments(node) {
 }
 
 function TSInterfaceDeclaration(node) {
-  const {
-    declare,
-    id,
-    typeParameters,
-    extends: extendz,
-    body
-  } = node;
+  const { declare, id, typeParameters, extends: extendz, body } = node;
 
   if (declare) {
     this.word("declare");
@@ -511,12 +494,7 @@ function TSInterfaceBody(node) {
 }
 
 function TSTypeAliasDeclaration(node) {
-  const {
-    declare,
-    id,
-    typeParameters,
-    typeAnnotation
-  } = node;
+  const { declare, id, typeParameters, typeAnnotation } = node;
 
   if (declare) {
     this.word("declare");
@@ -535,10 +513,7 @@ function TSTypeAliasDeclaration(node) {
 }
 
 function TSAsExpression(node) {
-  const {
-    expression,
-    typeAnnotation
-  } = node;
+  const { expression, typeAnnotation } = node;
   this.print(expression, node);
   this.space();
   this.word("as");
@@ -547,10 +522,7 @@ function TSAsExpression(node) {
 }
 
 function TSTypeAssertion(node) {
-  const {
-    typeAnnotation,
-    expression
-  } = node;
+  const { typeAnnotation, expression } = node;
   this.token("<");
   this.print(typeAnnotation, node);
   this.token(">");
@@ -559,12 +531,7 @@ function TSTypeAssertion(node) {
 }
 
 function TSEnumDeclaration(node) {
-  const {
-    declare,
-    const: isConst,
-    id,
-    members
-  } = node;
+  const { declare, const: isConst, id, members } = node;
 
   if (declare) {
     this.word("declare");
@@ -584,10 +551,7 @@ function TSEnumDeclaration(node) {
 }
 
 function TSEnumMember(node) {
-  const {
-    id,
-    initializer
-  } = node;
+  const { id, initializer } = node;
   this.print(id, node);
 
   if (initializer) {
@@ -601,10 +565,7 @@ function TSEnumMember(node) {
 }
 
 function TSModuleDeclaration(node) {
-  const {
-    declare,
-    id
-  } = node;
+  const { declare, id } = node;
 
   if (declare) {
     this.word("declare");
@@ -640,11 +601,7 @@ function TSModuleBlock(node) {
 }
 
 function TSImportType(node) {
-  const {
-    argument,
-    qualifier,
-    typeParameters
-  } = node;
+  const { argument, qualifier, typeParameters } = node;
   this.word("import");
   this.token("(");
   this.print(argument, node);
@@ -661,11 +618,7 @@ function TSImportType(node) {
 }
 
 function TSImportEqualsDeclaration(node) {
-  const {
-    isExport,
-    id,
-    moduleReference
-  } = node;
+  const { isExport, id, moduleReference } = node;
 
   if (isExport) {
     this.word("export");
@@ -713,10 +666,7 @@ function TSNamespaceExportDeclaration(node) {
 }
 
 function tsPrintSignatureDeclarationBase(node) {
-  const {
-    typeParameters,
-    parameters
-  } = node;
+  const { typeParameters, parameters } = node;
   this.print(typeParameters, node);
   this.token("(");
 
