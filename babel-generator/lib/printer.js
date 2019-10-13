@@ -8,7 +8,7 @@ exports.default = void 0;
 function _isInteger() {
   const data = _interopRequireDefault(require("lodash/isInteger"));
 
-  _isInteger = function () {
+  _isInteger = function() {
     return data;
   };
 
@@ -18,7 +18,7 @@ function _isInteger() {
 function _repeat() {
   const data = _interopRequireDefault(require("lodash/repeat"));
 
-  _repeat = function () {
+  _repeat = function() {
     return data;
   };
 
@@ -32,7 +32,7 @@ var n = _interopRequireWildcard(require("./node"));
 function t() {
   const data = _interopRequireWildcard(require("@babel/types"));
 
-  t = function () {
+  t = function() {
     return data;
   };
 
@@ -58,9 +58,34 @@ function getChildren(node) {
 
 var generatorFunctions = _interopRequireWildcard(require("./generators"));
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+function _interopRequireWildcard(obj) {
+  if (obj && obj.__esModule) {
+    return obj;
+  } else {
+    var newObj = {};
+    if (obj != null) {
+      for (var key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+          var desc =
+            Object.defineProperty && Object.getOwnPropertyDescriptor
+              ? Object.getOwnPropertyDescriptor(obj, key)
+              : {};
+          if (desc.get || desc.set) {
+            Object.defineProperty(newObj, key, desc);
+          } else {
+            newObj[key] = obj[key];
+          }
+        }
+      }
+    }
+    newObj.default = obj;
+    return newObj;
+  }
+}
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { default: obj };
+}
 
 const SCIENTIFIC_NOTATION = /e/i;
 const ZERO_DECIMAL_INTEGER = /\.0+$/;
@@ -118,13 +143,16 @@ class Printer {
   space(force = false) {
     if (this.format.compact) return;
 
-    if (this._buf.hasContent() && !this.endsWith(" ") && !this.endsWith("\n") || force) {
+    if (
+      (this._buf.hasContent() && !this.endsWith(" ") && !this.endsWith("\n")) ||
+      force
+    ) {
       this._space();
     }
   }
 
   word(str) {
-    if (this._endsWithWord || this.endsWith("/") && str.indexOf("/") === 0) {
+    if (this._endsWithWord || (this.endsWith("/") && str.indexOf("/") === 0)) {
       this._space();
     }
 
@@ -137,11 +165,21 @@ class Printer {
 
   number(str) {
     this.word(str);
-    this._endsWithInteger = (0, _isInteger().default)(+str) && !NON_DECIMAL_LITERAL.test(str) && !SCIENTIFIC_NOTATION.test(str) && !ZERO_DECIMAL_INTEGER.test(str) && str[str.length - 1] !== ".";
+    this._endsWithInteger =
+      (0, _isInteger().default)(+str) &&
+      !NON_DECIMAL_LITERAL.test(str) &&
+      !SCIENTIFIC_NOTATION.test(str) &&
+      !ZERO_DECIMAL_INTEGER.test(str) &&
+      str[str.length - 1] !== ".";
   }
 
   token(str) {
-    if (str === "--" && this.endsWith("!") || str[0] === "+" && this.endsWith("+") || str[0] === "-" && this.endsWith("-") || str[0] === "." && this._endsWithInteger) {
+    if (
+      (str === "--" && this.endsWith("!")) ||
+      (str[0] === "+" && this.endsWith("+")) ||
+      (str[0] === "-" && this.endsWith("-")) ||
+      (str[0] === "." && this._endsWithInteger)
+    ) {
       this._space();
     }
 
@@ -218,7 +256,8 @@ class Printer {
 
     this._maybeIndent(str);
 
-    if (queue) this._buf.queue(str);else this._buf.append(str);
+    if (queue) this._buf.queue(str);
+    else this._buf.append(str);
     this._endsWithWord = false;
     this._endsWithInteger = false;
   }
@@ -274,9 +313,9 @@ class Printer {
       this._noLineTerminator = true;
       return null;
     } else {
-      return this._parenPushNewlineState = {
+      return (this._parenPushNewlineState = {
         printed: false
-      };
+      });
     }
   }
 
@@ -301,7 +340,11 @@ class Printer {
     const printMethod = this[node.type];
 
     if (!printMethod) {
-      throw new ReferenceError(`unknown node of type ${JSON.stringify(node.type)} with constructor ${JSON.stringify(node && node.constructor.name)}`);
+      throw new ReferenceError(
+        `unknown node of type ${JSON.stringify(
+          node.type
+        )} with constructor ${JSON.stringify(node && node.constructor.name)}`
+      );
     }
 
     this._printStack.push(node);
@@ -313,7 +356,13 @@ class Printer {
 
     let needsParens = n.needsParens(node, parent, this._printStack);
 
-    if (this.format.retainFunctionParens && node.type === "FunctionExpression" && node.extra && node.extra.parenthesized) {
+    if (
+      (node.extra && node.extra.parenthesized) ||
+      (this.format.retainFunctionParens &&
+        node.type === "FunctionExpression" &&
+        node.extra &&
+        node.extra.parenthesized)
+    ) {
       needsParens = true;
     }
 
@@ -335,7 +384,7 @@ class Printer {
 
     if (parent && parent.newlines) {
       const children = getChildren(parent);
-      // All newlines move trailing comments to be part of the previous 
+      // All newlines move trailing comments to be part of the previous
       // statement's newlines.  The final statement's trailing comments
       // are stored in an extra array of newlines which are printed here.
       if (children.indexOf(node) === children.length - 1) {
@@ -388,7 +437,12 @@ class Printer {
   getPossibleRaw(node) {
     const extra = node.extra;
 
-    if (extra && extra.raw != null && extra.rawValue != null && node.value === extra.rawValue) {
+    if (
+      extra &&
+      extra.raw != null &&
+      extra.rawValue != null &&
+      node.value === extra.rawValue
+    ) {
       return extra.raw;
     }
   }
@@ -420,7 +474,7 @@ class Printer {
       }
 
       if (opts.statement) {
-        const hasNewlines = parent.newlines && parent.newlines[i+1];
+        const hasNewlines = parent.newlines && parent.newlines[i + 1];
         if (!hasNewlines) {
           this._printNewline(false, node, parent, newlineOpts);
         }
@@ -498,7 +552,9 @@ class Printer {
   }
 
   _getComments(leading, node) {
-    return node && (leading ? node.leadingComments : node.trailingComments) || [];
+    return (
+      (node && (leading ? node.leadingComments : node.trailingComments)) || []
+    );
   }
 
   _printComment(comment) {
@@ -514,9 +570,16 @@ class Printer {
     }
 
     const isBlockComment = comment.type === "CommentBlock";
-    this.newline(this._buf.hasContent() && !this._noLineTerminator && isBlockComment ? 1 : 0);
+    this.newline(
+      this._buf.hasContent() && !this._noLineTerminator && isBlockComment
+        ? 1
+        : 0
+    );
     if (!this.endsWith("[") && !this.endsWith("{")) this.space();
-    let val = !isBlockComment && !this._noLineTerminator ? `//${comment.value}\n` : `/*${comment.value}*/`;
+    let val =
+      !isBlockComment && !this._noLineTerminator
+        ? `//${comment.value}\n`
+        : `/*${comment.value}*/`;
 
     if (isBlockComment && this.format.indent.adjustMultilineComment) {
       const offset = comment.loc && comment.loc.start.column;
@@ -526,8 +589,14 @@ class Printer {
         val = val.replace(newlineRegex, "\n");
       }
 
-      const indentSize = Math.max(this._getIndent().length, this._buf.getCurrentColumn());
-      val = val.replace(/\n(?!$)/g, `\n${(0, _repeat().default)(" ", indentSize)}`);
+      const indentSize = Math.max(
+        this._getIndent().length,
+        this._buf.getCurrentColumn()
+      );
+      val = val.replace(
+        /\n(?!$)/g,
+        `\n${(0, _repeat().default)(" ", indentSize)}`
+      );
     }
 
     if (this.endsWith("/")) this._space();
@@ -544,7 +613,6 @@ class Printer {
       this._printComment(comment);
     }
   }
-
 }
 
 exports.default = Printer;
