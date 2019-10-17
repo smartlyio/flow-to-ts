@@ -530,7 +530,7 @@ const transform = {
       }
     },
     exit(path) {
-      const { exact, properties, indexers } = path.node; // TODO: callProperties, inexact
+      const { inexact, exact, properties, indexers } = path.node; // TODO: callProperties, inexact
 
       if (exact) {
         console.warn("downgrading exact object type");
@@ -566,6 +566,26 @@ const transform = {
           spreads.push(t.tsTypeReference(typeName, typeParameters));
         }
       });
+
+      if (
+        inexact &&
+        !indexers.some(indexer => indexer.type === "TSIndexSignature")
+      ) {
+        const identifier = {
+          type: "Identifier",
+          name: "key",
+          typeAnnotation: t.tsTypeAnnotation(t.tsStringKeyword())
+        };
+
+        const indexSignature = {
+          type: "TSIndexSignature",
+          parameters: [identifier],
+          typeAnnotation: t.tsTypeAnnotation(t.tsAnyKeyword()),
+          readonly: false
+        };
+
+        elements.push(indexSignature);
+      }
 
       if (spreads.length > 0 && elements.length > 0) {
         path.replaceWith(
