@@ -403,8 +403,8 @@ const transform = {
         }
       }
 
-      if (typeName.name == "Object") {
-        console.warn("replacing Object with any");
+      if (typeName.name == "Object" || typeName.name == "Function") {
+        console.warn(`replacing ${typeName.name} with any`);
         path.replaceWith(t.tsAnyKeyword());
       } else if (typeName.name in UnqualifiedReactTypeNameMap) {
         // TODO: make sure that React was imported in this file
