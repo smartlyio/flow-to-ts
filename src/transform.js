@@ -775,6 +775,18 @@ const transform = {
         declaration
       });
     }
+  },
+  CallExpression: {
+    exit(path) {
+      const { callee } = path.node;
+
+      // Flow's react-redux#connect types are not compatible to typescripts. TS
+      // does a good job interferencing the correct types for the call so remove
+      // the type definition
+      if (callee.name == "connect") {
+        delete path.node.typeArguments;
+      }
+    }
   }
 };
 
