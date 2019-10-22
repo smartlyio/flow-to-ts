@@ -81,7 +81,7 @@ describe("cli", () => {
   it("should write a file", () => {
     // Arrange
     const inputPath = path.join(tmpdir, "test.js");
-    fs.writeFileSync(inputPath, "const a: number = 5;", "utf-8");
+    fs.writeFileSync(inputPath, "// @flow\nconst a: number = 5;", "utf-8");
 
     // Act
     cli([
@@ -100,12 +100,12 @@ describe("cli", () => {
     const inputGlob = path.join(tmpdir, "*.js");
     fs.writeFileSync(
       path.join(tmpdir, "foo.js"),
-      "const a: number = 5;",
+      "// @flow\nconst a: number = 5;",
       "utf-8"
     );
     fs.writeFileSync(
       path.join(tmpdir, "bar.js"),
-      "const b: boolean = true;",
+      "//@flow\nconst b: boolean = true;",
       "utf-8"
     );
 
@@ -122,11 +122,32 @@ describe("cli", () => {
     expect(fs.existsSync(path.join(tmpdir, "bar.ts"))).toBe(true);
   });
 
+  it("retains .js extension when no flow annotation exists", () => {
+    // Arrange
+    const inputGlob = path.join(tmpdir, "*.js");
+    fs.writeFileSync(
+      path.join(tmpdir, "foo.js"),
+      "const a: number = 5;",
+      "utf-8"
+    );
+
+    // Act
+    cli([
+      "node",
+      path.join(__dirname, "../flow-to-ts.js"),
+      "--write",
+      inputGlob
+    ]);
+
+    // Assert
+    expect(fs.existsSync(path.join(tmpdir, "foo.js"))).toBe(true);
+  });
+
   it("should delete the original file", () => {
     // Arrange
     const inputPath = path.join(tmpdir, "test.js");
     const outputPath = path.join(tmpdir, "test.ts");
-    fs.writeFileSync(inputPath, "const a: number = 5;", "utf-8");
+    fs.writeFileSync(inputPath, "// @flow\nconst a: number = 5;", "utf-8");
 
     // Act
     cli([
@@ -147,12 +168,12 @@ describe("cli", () => {
     const inputGlob = path.join(tmpdir, "*.js");
     fs.writeFileSync(
       path.join(tmpdir, "foo.js"),
-      "const a: number = 5;",
+      "// @flow\nconst a: number = 5;",
       "utf-8"
     );
     fs.writeFileSync(
       path.join(tmpdir, "bar.js"),
-      "const b: boolean = true;",
+      "// @flow\nconst b: boolean = true;",
       "utf-8"
     );
 
@@ -176,7 +197,7 @@ describe("cli", () => {
     // Arrange
     const inputPath = path.join(tmpdir, "test.js");
     const outputPath = path.join(tmpdir, "test.ts");
-    fs.writeFileSync(inputPath, "const a: number = 5;", "utf-8");
+    fs.writeFileSync(inputPath, "// @flow\nconst a: number = 5;", "utf-8");
 
     // Act
     cli([
@@ -188,7 +209,7 @@ describe("cli", () => {
 
     // Assert
     const output = fs.readFileSync(outputPath, "utf-8");
-    expect(output).toBe("const a: number = 5;");
+    expect(output).toBe("\nconst a: number = 5;");
   });
 
   // TODO: add tests for option handling

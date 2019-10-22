@@ -6,6 +6,8 @@ const convert = require("./convert.js");
 const detectJsx = require("./detect-jsx.js");
 const version = require("../package.json").version;
 
+const isFlow = code => code.match(/\/(\/|\*)\s*@flow/);
+
 const cli = argv => {
   program
     .version(version)
@@ -83,13 +85,15 @@ const cli = argv => {
 
       if (program.write) {
         const extension = detectJsx(inCode) ? ".tsx" : ".ts";
-        const outFile = file.replace(/\.js$/, extension);
+        const outFile = isFlow(inCode)
+          ? file.replace(/\.js$/, extension)
+          : file;
         fs.writeFileSync(outFile, outCode);
       } else {
         console.log(outCode);
       }
 
-      if (program.deleteSource) {
+      if (program.deleteSource && isFlow(inCode)) {
         fs.unlinkSync(inFile);
       }
     } catch (e) {
