@@ -353,7 +353,11 @@ const transform = {
   TypeParameterInstantiation: {
     exit(path) {
       const { params } = path.node;
-      path.replaceWith(t.tsTypeParameterInstantiation(params));
+      if (params.length) {
+        path.replaceWith(t.tsTypeParameterInstantiation(params));
+      } else {
+        path.remove();
+      }
     }
   },
   TypeParameterDeclaration: {
