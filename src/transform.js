@@ -67,7 +67,7 @@ const UnqualifiedReactTypeNameMap = {
   SyntheticAnimationEvent: "AnimationEvent",
   SyntheticClipboardEvent: "ClipboardEvent",
   SyntheticCompositionEvent: "CompositionEvent",
-  SyntheticInputEvent: "InputEvent",
+  SyntheticInputEvent: "ChangeEvent",
   SyntheticUIEvent: "UIEvent",
   SyntheticFocusEvent: "FocusEvent",
   SyntheticKeyboardEvent: "KeyboardEvent",
@@ -89,7 +89,6 @@ const QualifiedReactTypeNameMap = {
   Fragment: "ReactFragment",
   Portal: "ReactPortal",
   NodeArray: "ReactNodeArray",
-  InputEvent: "ChangeEvent",
   AbstractComponent: "ComponentType"
 
   // TODO: private types, e.g. React$ElementType, React$Node, etc.
